@@ -44,7 +44,7 @@ const Hello = () => {
   useEffect(() => {
     const imgDom = imgRef.current;
     // 加载图片
-    ipcRenderer.on('img-path', (event, message) => {
+    ipcRenderer.on('img-path', (_, message) => {
       imgDom.src = message;
     });
     // 实现滑轮放大，缩小

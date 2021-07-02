@@ -6,6 +6,7 @@ module.exports = {
     'no-console': 0,
     'prefer-template': 0,
     '@typescript-eslint/no-shadow': 'off',
+    '@typescript-eslint/no-explicit-any': 'off',
   },
   parserOptions: {
     ecmaVersion: 2020,

@@ -125,7 +125,7 @@ app.on('window-all-closed', () => {
   }
 });
 
-app.on('open-file', (event, imgpath) => {
+app.on('open-file', (_, imgpath) => {
   if (mainWindow) {
     mainWindow.webContents.send('img-path', imgpath);
   } else {
