@@ -23,9 +23,8 @@ export default class AppUpdater {
     autoUpdater.checkForUpdatesAndNotify();
   }
 }
-
 let mainWindow: BrowserWindow | null = null;
-
+let globalImgPath = '';
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
   sourceMapSupport.install();
@@ -91,6 +90,9 @@ const createWindow = async () => {
       mainWindow.show();
       mainWindow.focus();
     }
+    if (globalImgPath) {
+      mainWindow.webContents.send('img-path', globalImgPath);
+    }
   });
 
   mainWindow.on('closed', () => {
@@ -120,6 +122,14 @@ app.on('window-all-closed', () => {
   // after all windows have been closed
   if (process.platform !== 'darwin') {
     app.quit();
+  }
+});
+
+app.on('open-file', (event, imgpath) => {
+  if (mainWindow) {
+    mainWindow.webContents.send('img-path', imgpath);
+  } else {
+    globalImgPath = imgpath;
   }
 });
 
