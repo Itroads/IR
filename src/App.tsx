@@ -3,8 +3,6 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import './App.global.css';
 import { ipcRenderer } from 'electron';
 
-// const ipcRenderer = electron.ipcRenderer;
-
 const Hello = () => {
   const imgRef = useRef({} as any);
 

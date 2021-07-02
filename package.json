@@ -1,7 +1,7 @@
 {
-  "name": "electron-react-boilerplate",
-  "productName": "ElectronReact",
-  "description": "Electron application boilerplate based on React, React Router, Webpack, React Fast Refresh for rapid application development",
+  "name": "electron-ir",
+  "productName": "IR",
+  "description": "A simple image reader for Mac",
   "scripts": {
     "build": "concurrently \"yarn build:main\" \"yarn build:renderer\"",
     "build:main": "cross-env NODE_ENV=production webpack --config ./.erb/configs/webpack.config.main.prod.babel.js",
@@ -30,8 +30,16 @@
     ]
   },
   "build": {
-    "productName": "ElectronReact",
-    "appId": "org.erb.ElectronReact",
+    "productName": "IR",
+    "appId": "org.erb.IR",
+    "fileAssociations": {
+      "ext": [
+        "jpg",
+        "png",
+        "jpeg"
+      ],
+      "role": "Viewer"
+    },
     "files": [
       "dist/",
       "node_modules/",
@@ -86,8 +94,8 @@
     ],
     "publish": {
       "provider": "github",
-      "owner": "electron-react-boilerplate",
-      "repo": "electron-react-boilerplate"
+      "owner": "Itroads",
+      "repo": "IR"
     }
   },
   "repository": {
@@ -95,25 +103,20 @@
     "url": "git+https://github.com/electron-react-boilerplate/electron-react-boilerplate.git"
   },
   "author": {
-    "name": "Electron React Boilerplate Maintainers",
-    "email": "electronreactboilerplate@gmail.com",
-    "url": "https://electron-react-boilerplate.js.org"
+    "name": "Itroads",
+    "email": "itroads@163.com",
+    "url": "https://github.com/Itroads/IR"
   },
   "contributors": [
     {
-      "name": "Amila Welihinda",
-      "email": "amilajack@gmail.com",
-      "url": "https://github.com/amilajack"
-    },
-    {
-      "name": "John Tran",
-      "email": "jptran318@gmail.com",
-      "url": "https://github.com/jooohhn"
+      "name": "Itroads",
+      "email": "itroads@163.com",
+      "url": "https://github.com/Itroads/IR"
     }
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/electron-react-boilerplate/electron-react-boilerplate/issues"
+    "url": "https://github.com/Itroads/IR/issues"
   },
   "keywords": [
     "electron",
@@ -126,7 +129,7 @@
     "hot",
     "reload"
   ],
-  "homepage": "https://github.com/electron-react-boilerplate/electron-react-boilerplate#readme",
+  "homepage": "https://github.com/Itroads/IR#readme",
   "jest": {
     "testURL": "http://localhost/",
     "moduleNameMapper": {
