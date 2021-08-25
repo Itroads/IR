@@ -1,9 +1,11 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import './App.global.css';
 import { ipcRenderer } from 'electron';
+import OpenModel from './constanst';
 
 const Hello = () => {
+  const [openModel, setOpenModel] = useState(OpenModel.Drag);
   const imgRef = useRef({} as any);
 
   function handleMouseWheel(e: any) {
@@ -20,14 +22,11 @@ const Hello = () => {
     imgRef.current.onmousedown = (event: any) => {
       event.preventDefault();
       // 获取屏幕中可视化的宽高的坐标
-      console.log('event.clientX= ', event.clientX);
-      console.log('offsetLeft= ', imgRef.current.offsetLeft);
       const dx = event.clientX - imgRef.current.offsetLeft;
       const dy = event.clientY - imgRef.current.offsetTop;
-      console.log(dx);
+
       // 实时改变目标元素imgRef.current的位置
       imgRef.current.onmousemove = (event: any) => {
-        console.log('onmousemove= ', event.clientX - dx);
         imgRef.current.style.left = event.clientX - dx + 'px';
         imgRef.current.style.top = event.clientY - dy + 'px';
       };
@@ -42,30 +41,44 @@ const Hello = () => {
   }
 
   useEffect(() => {
-    const imgDom = imgRef.current;
-    // 加载图片
-    ipcRenderer.on('img-path', (_, message) => {
-      imgDom.src = message;
-    });
-    // 实现滑轮放大，缩小
-    imgDom.addEventListener('mousewheel', handleMouseWheel);
+    let imgDom: HTMLImageElement;
+    if (OpenModel.File) {
+      imgDom = imgRef.current;
+      // 加载图片
+      ipcRenderer.on('img-path', (_, message) => {
+        console.log('message=', message);
+        if (message) {
+          imgDom.src = message;
+        } else {
+          setOpenModel(OpenModel.File);
+        }
+      });
+      // 实现滑轮放大，缩小
+      // imgDom.addEventListener('mousewheel', handleMouseWheel);
 
-    handleMoveImg();
+      // 图片拖拽
+      handleMoveImg();
+    }
 
     return function cleanup() {
-      imgDom.removeEventListener('mousewheel', () => {});
+      if (OpenModel.File) {
+        imgDom.removeEventListener('mousewheel', () => {});
+      }
     };
   });
 
   return (
     <div className="box">
-      <img
-        ref={imgRef}
-        style={{ position: 'relative' }}
-        // src={demoImg}
-        id="photo"
-        alt="图片查看"
-      />
+      {openModel === OpenModel.File ? (
+        <img
+          ref={imgRef}
+          style={{ position: 'relative' }}
+          id="photo"
+          alt="图片查看"
+        />
+      ) : (
+        <div>拖拽打开图片</div>
+      )}
     </div>
   );
 };
