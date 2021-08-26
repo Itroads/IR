@@ -61,15 +61,23 @@ const Hello = () => {
       // 图片拖拽
       handleMoveImg();
     }
-    dragRef.current.addEventListener('drop', (e: any) => {
+    console.log('event listener');
+    dragRef.current.addEventListener(
+      'drop',
+      (e: any) => {
+        e.preventDefault();
+        console.log(e);
+        const { files } = e.dataTransfer;
+        console.log('path', files[0].path);
+      },
+      false
+    );
+    dragRef.current.addEventListener('dragover', (e: any) => {
       e.preventDefault();
-      const { files } = e.dataTransfer;
-      console.log('path', files[0].path);
     });
     return function cleanup() {
-      if (OpenModel.File) {
-        imgDom.removeEventListener('mousewheel', () => {});
-      }
+      imgDom.removeEventListener('mousewheel', () => {});
+      document.addEventListener('drop', () => {});
     };
   });
 
