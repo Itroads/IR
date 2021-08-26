@@ -3,10 +3,12 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import './App.global.css';
 import { ipcRenderer } from 'electron';
 import OpenModel from './constanst';
+import styles from './app.css';
 
 const Hello = () => {
   const [openModel, setOpenModel] = useState(OpenModel.Drag);
   const imgRef = useRef({} as any);
+  const dragRef = useRef({} as any);
 
   function handleMouseWheel(e: any) {
     const down = e.wheelDelta > 0;
@@ -54,12 +56,16 @@ const Hello = () => {
         }
       });
       // 实现滑轮放大，缩小
-      // imgDom.addEventListener('mousewheel', handleMouseWheel);
+      imgDom.addEventListener('mousewheel', handleMouseWheel);
 
       // 图片拖拽
       handleMoveImg();
     }
-
+    dragRef.current.addEventListener('drop', (e: any) => {
+      e.preventDefault();
+      const { files } = e.dataTransfer;
+      console.log('path', files[0].path);
+    });
     return function cleanup() {
       if (OpenModel.File) {
         imgDom.removeEventListener('mousewheel', () => {});
@@ -69,16 +75,21 @@ const Hello = () => {
 
   return (
     <div className="box">
-      {openModel === OpenModel.File ? (
-        <img
-          ref={imgRef}
-          style={{ position: 'relative' }}
-          id="photo"
-          alt="图片查看"
-        />
-      ) : (
-        <div>拖拽打开图片</div>
-      )}
+      <img
+        ref={imgRef}
+        className={openModel === OpenModel.File ? styles.show : styles.hide}
+        style={{ position: 'relative' }}
+        id="photo"
+        alt="图片"
+      />
+      <div
+        ref={dragRef}
+        className={`${
+          openModel === OpenModel.Drag ? styles.show : styles.hide
+        } ${styles.dragBox}`}
+      >
+        拖拽打开图片
+      </div>
     </div>
   );
 };
