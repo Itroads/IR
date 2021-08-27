@@ -2,13 +2,11 @@ import React, { useEffect, useRef, useState } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import './App.global.css';
 import { ipcRenderer } from 'electron';
-import OpenModel from './constanst';
 import styles from './app.css';
 
 const Hello = () => {
-  const [openModel, setOpenModel] = useState(OpenModel.Drag);
+  const [isUrl, setIsUrl] = useState(false);
   const imgRef = useRef({} as any);
-  const dragRef = useRef({} as any);
 
   function handleMouseWheel(e: any) {
     const down = e.wheelDelta > 0;
@@ -43,59 +41,52 @@ const Hello = () => {
   }
 
   useEffect(() => {
-    let imgDom: HTMLImageElement;
-    if (OpenModel.File) {
-      imgDom = imgRef.current;
-      // 加载图片
-      ipcRenderer.on('img-path', (_, message) => {
-        console.log('message=', message);
-        if (message) {
-          imgDom.src = message;
-        } else {
-          setOpenModel(OpenModel.File);
-        }
-      });
-      // 实现滑轮放大，缩小
-      imgDom.addEventListener('mousewheel', handleMouseWheel);
+    const imgDom = imgRef.current;
+    // 加载图片
+    ipcRenderer.on('img-path', (_, message) => {
+      if (message) {
+        imgDom.src = message;
+      } else {
+        setIsUrl(false);
+      }
+    });
+    // 实现滑轮放大，缩小
+    imgDom.addEventListener('mousewheel', handleMouseWheel);
 
-      // 图片拖拽
-      handleMoveImg();
-    }
-    console.log('event listener');
-    dragRef.current.addEventListener(
+    // 图片拖拽
+    handleMoveImg();
+
+    document.addEventListener(
       'drop',
       (e: any) => {
         e.preventDefault();
         console.log(e);
         const { files } = e.dataTransfer;
         console.log('path', files[0].path);
+        imgDom.src = files[0].path;
+        setIsUrl(true);
       },
       false
     );
-    dragRef.current.addEventListener('dragover', (e: any) => {
+    document.addEventListener('dragover', (e: any) => {
       e.preventDefault();
     });
     return function cleanup() {
       imgDom.removeEventListener('mousewheel', () => {});
       document.addEventListener('drop', () => {});
     };
-  });
+  }, []);
 
   return (
     <div className="box">
       <img
         ref={imgRef}
-        className={openModel === OpenModel.File ? styles.show : styles.hide}
+        className={isUrl ? styles.show : styles.hide}
         style={{ position: 'relative' }}
         id="photo"
         alt="图片"
       />
-      <div
-        ref={dragRef}
-        className={`${
-          openModel === OpenModel.Drag ? styles.show : styles.hide
-        } ${styles.dragBox}`}
-      >
+      <div className={`${isUrl ? styles.hide : styles.show} ${styles.dragBox}`}>
         拖拽打开图片
       </div>
     </div>
