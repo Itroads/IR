@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import './App.global.css';
 import { ipcRenderer } from 'electron';
-import styles from './app.css';
+import styles from './app.module.css';
 
 const Hello = () => {
   const [isUrl, setIsUrl] = useState(false);
