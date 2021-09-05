@@ -7,6 +7,7 @@ module.exports = {
     'prefer-template': 0,
     '@typescript-eslint/no-shadow': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
+    'import/prefer-default-export': 0,
   },
   parserOptions: {
     ecmaVersion: 2020,
