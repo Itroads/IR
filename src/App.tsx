@@ -1,22 +1,25 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import './App.global.css';
+
 import { ipcRenderer } from 'electron';
+
+import { handleMouseWheel } from './utils/handleImgFuncs';
+import './App.global.css';
 import styles from './app.module.css';
 
 const Hello = () => {
   const [isUrl, setIsUrl] = useState(false);
-  const imgRef = useRef({} as any);
+  const imgRef = useRef({} as HTMLImageElement);
 
-  function handleMouseWheel(e: any) {
-    const down = e.wheelDelta > 0;
+  // function handleMouseWheel(e: any) {
+  //   const down = e.wheelDelta > 0;
 
-    if (down) {
-      imgRef.current.style.height = imgRef.current.offsetHeight + 10 + 'px';
-    } else {
-      imgRef.current.style.height = imgRef.current.offsetHeight - 10 + 'px';
-    }
-  }
+  //   if (down) {
+  //     imgRef.current.style.height = imgRef.current.offsetHeight + 10 + 'px';
+  //   } else {
+  //     imgRef.current.style.height = imgRef.current.offsetHeight - 10 + 'px';
+  //   }
+  // }
 
   function handleMoveImg() {
     imgRef.current.onmousedown = (event: any) => {
@@ -51,7 +54,7 @@ const Hello = () => {
       }
     });
     // 实现滑轮放大，缩小
-    imgDom.addEventListener('mousewheel', handleMouseWheel);
+    imgDom.addEventListener('mousewheel', (e) => handleMouseWheel(e, imgRef));
 
     // 图片拖拽
     handleMoveImg();
